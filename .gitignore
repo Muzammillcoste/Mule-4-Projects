@@ -1,0 +1,10 @@
+target/
+.settings/
+.classpath
+.project
+.metadata/
+.idea/
+*.log
+.mule
+.tooling
+.tooling-apps-cache

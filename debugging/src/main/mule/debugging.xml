@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="2f621162-fd8f-4717-af2c-ac55b6d0b049" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<flow name="Flow" doc:id="de9c05ba-e8a6-4aed-8206-3d46d2b900e8" >
+		<http:listener doc:name="Listener" doc:id="cfe1d2fb-d9b6-4e25-9d2d-648dec6651f3" config-ref="HTTP_Listener_config" path="/debug"/>
+		<logger level="INFO" doc:name="start" doc:id="c181f9c5-b0a0-4bfd-ab85-9259d7724079" message='#["start"]'/>
+		<set-variable value='#["BMW"]' doc:name="carName" doc:id="a8f3142e-e665-4a79-b20e-feb97703518c" variableName="car"/>
+		<flow-ref doc:name="Flow Reference" doc:id="93da8e1c-ba58-440e-a889-d7ef4bfac648" name="Subflow"/>
+		<logger level="INFO" doc:name="After Payload" doc:id="754adbc7-e7b3-4421-976d-f40349960db0" message="#[attributes.queryParams]"/>
+	</flow>
+	<flow name="Subflow" doc:id="d7f640ea-d97a-44a9-92bb-c242290edac7" >
+		<set-payload value='#["debugging bro" ++ vars.car]' doc:name="Set Payload" doc:id="53907254-bb79-4f78-9275-f73097438387" />
+	</flow>
+</mule>

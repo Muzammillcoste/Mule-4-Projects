@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="e34ed4a6-124b-4f79-b95d-7478a52cf6bc" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<flow name="scopesFlow" doc:id="9bfd60e5-617a-48a0-a80a-8b3da89c87e7" >
+		<http:listener doc:name="Listener" doc:id="8d4ffd0d-a33a-4343-99c7-3bf5377380e9" config-ref="HTTP_Listener_config" path="/scope"/>
+		<set-variable value='#["BMW"]' doc:name="Set Variable" doc:id="6f161725-9d39-49eb-9e74-8411dc1e2472" variableName="Car"/>
+		<logger level="INFO" doc:name="Logger" doc:id="c276b771-4080-4ba2-94bb-4e422b0a0028" message='#["start"]'/>
+		<http:request method="CONNECT" doc:name="Request" doc:id="36fe07c2-0833-4a31-8cf6-11f6812d87ba" url="http://localhost:8081/test"/>
+		<logger level="INFO" doc:name="Logger" doc:id="cc6219ca-4652-44a1-ad1e-c244912a6252" message='#["Done"]'/>
+	</flow>
+	<flow name="scopesFlow1" doc:id="7e0ee56e-f36b-4a4c-9575-fea8b06841c6" >
+		<http:listener doc:name="Listener" doc:id="9ea3bf7a-028f-4eac-96ba-cdc1333650cd" config-ref="HTTP_Listener_config" path="/test"/>
+		<set-payload value='Hello from other Flow by Request' doc:name="Set Payload" doc:id="a5c18f30-e5b2-4d5e-8b45-2d43420f51d7" />
+	</flow>
+</mule>
