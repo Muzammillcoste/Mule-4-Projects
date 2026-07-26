@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="c3ea7d62-e38e-43f7-8eda-33e8b7fb5ccd" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<flow name="scatter-gatherFlow" doc:id="f97f1ed5 -00b0-4e7e-b1ab-63689484efac" >
+		<http:listener doc:name="Listener" doc:id="0c7240f6-fa71-4cfa-a1dd-6092d557ba55" config-ref="HTTP_Listener_config" path="/scatter-gather"/>
+		<set-variable value="#[attributes.queryParams.city1]" doc:name="cityNum1" doc:id="d3ec7ff3-fc2a-4e17-9350-6ddcfdc7f0e5" variableName="cityNum1"/>
+		<set-variable value="#[attributes.queryParams.city2]" doc:name="cityNum2" doc:id="ed5c70de-dfdc-4fd9-beda-ee61cf517c8d" variableName="cityNum2"/>
+		<scatter-gather doc:name="Scatter-Gather" doc:id="b27b5f2a-0c93-42d1-af0d-9e8a0a5d0ef1" >
+			<route >
+				<http:request method="GET" doc:name="Request" doc:id="ae5c3a78-7e52-4a62-be6f-36798e946f49" url="http://api.weatherstack.com/current">
+					<http:query-params ><![CDATA[#[output application/json
+---
+{
+	"access_key" : "dd591e52f4287f9955418e1e3b52c48d",
+	"query" :  vars.cityNum1
+}]]]></http:query-params>
+				</http:request>
+			</route>
+			<route >
+				<http:request method="GET" doc:name="Request" doc:id="db2e1cb4-3a84-44d9-99ba-1f760614a290" url="http://api.weatherstack.com/current">
+					<http:query-params ><![CDATA[#[output application/json
+---
+{
+	"access_key" : "dd591e52f4287f9955418e1e3b52c48d",
+	"query" :  vars.cityNum2
+}]]]></http:query-params>
+				</http:request>
+			</route>
+		</scatter-gather>
+		<ee:transform doc:name="Transform Message" doc:id="a87230b3-8b68-4430-985a-d9128a5d7600" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

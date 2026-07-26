@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="15f84e85-d56c-4db0-be96-05b61d873f79" >
-		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="ec1d7086-ccf2-4244-a6b6-ef0cf8b18e31" file="message.properties" />
 	<flow name="hellomuleFlow" doc:id="25251e75-76be-45b5-88c2-38a56f9de862" >
 		<http:listener doc:name="Listener" doc:id="b1194190-50ca-4b30-b065-9d768b4938b9" config-ref="HTTP_Listener_config" path="hellomule"/>
-		<set-payload value='"Hello Mule!"' doc:name="Set Payload" doc:id="79daeb6d-b085-4b47-89f3-62b95a5fda42" />
-		<logger level="INFO" doc:name="Logger" doc:id="057c51af-2e02-43c0-bbdc-10cf4e61ed33" message="#[attributes.requestPath]"/>
+		<ee:transform doc:name="Transform Message" doc:id="020f41e4-8ab8-4176-a969-31918fb1e119" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	'message from property file': "${message}"
+} 
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="057c51af-2e02-43c0-bbdc-10cf4e61ed33" message="#[attributes.requestPath]" />
 	</flow>
 </mule>
