@@ -19,7 +19,7 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 					<http:query-params ><![CDATA[#[output application/json
 ---
 {
-	"access_key" : "dd591e52f4287f9955418e1e3b52c48d",
+	"access_key" : "access_key",
 	"query" :  vars.cityNum1
 }]]]></http:query-params>
 				</http:request>
@@ -29,7 +29,7 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 					<http:query-params ><![CDATA[#[output application/json
 ---
 {
-	"access_key" : "dd591e52f4287f9955418e1e3b52c48d",
+	"access_key" : "access_key",
 	"query" :  vars.cityNum2
 }]]]></http:query-params>
 				</http:request>
